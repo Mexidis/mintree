@@ -21,7 +21,7 @@ object GraphReader {
         val graph = Graph<String>()
         val file = File(filePath)
 
-        if (file.exists() == false) {
+        if (!file.exists()) {
             throw IOException("El archivo no se encuentra en la ruta: $filePath")
         }
 
@@ -36,10 +36,10 @@ object GraphReader {
                         val weight = parts[2].trim().toDouble()
                         graph.addEdge(u, v, weight)
                     } catch (e: NumberFormatException) {
-                        System.err.println("Advertencia: Ignorando línea por peso inválido: $line")
+                        System.err.println("Advertencia: Ignorando linea por peso invalido: $line")
                     }
                 } else {
-                    System.err.println("Advertencia: Ignorando línea mal formateada: $line")
+                    System.err.println("Advertencia: Ignorando linea mal formateada: $line")
                 }
             }
         }

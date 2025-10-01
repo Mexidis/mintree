@@ -22,7 +22,7 @@ class Graph<V> {
 
     override fun toString(): String {
         val edgeStrings = edges.joinToString(separator = "\n  ") {
-            "(${it.u} -- ${it.v}, w:${it.weight})"
+            "(${it.u} - ${it.v}, w:${it.weight})"
         }
         return "Graph with ${vertices.size} vertices and ${edges.size} edges:\n  $edgeStrings"
     }

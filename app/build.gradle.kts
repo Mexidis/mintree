@@ -37,10 +37,15 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "org.example.AppKt"
+    mainClass = "hoc.unam.AppKt" // Asegúrate que el paquete coincida con tus archivos.
 }
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+// Añade esta sección para configurar la tarea 'run'
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
 }
