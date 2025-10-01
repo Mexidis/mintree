@@ -1,4 +1,4 @@
-package org.example
+package hoc.unam
 
 /**
  * Representa una gráfica con un conjunto de vértices y una lista de aristas.
