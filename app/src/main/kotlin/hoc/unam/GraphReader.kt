@@ -17,8 +17,8 @@ object GraphReader {
      * @throws IOException si el archivo no puede ser leído.
      * @throws NumberFormatException si el peso no es un número válido.
      */
-    fun readFromFile(filePath: String): Graph<String> {
-        val graph = Graph<String>()
+    fun readFromFile(filePath: String): AdjacencyList<String> {
+        val graph = AdjacencyList<String>()
         val file = File(filePath)
 
         if (!file.exists()) {
@@ -32,9 +32,11 @@ object GraphReader {
                 if (parts.size == 3) {
                     val u = parts[0].trim()
                     val v = parts[1].trim()
+                    val source = graph.createVertex(u)
+                    val destination = graph.createVertex(v)
                     try {
                         val weight = parts[2].trim().toDouble()
-                        graph.addEdge(u, v, weight)
+                        graph.add(EdgeType.UNDIRECTED, source, destination, weight)
                     } catch (e: NumberFormatException) {
                         System.err.println("Advertencia: Ignorando linea por peso invalido: $line")
                     }
@@ -44,5 +46,9 @@ object GraphReader {
             }
         }
         return graph
+    }
+
+    private fun completeGraph(graph: AdjacencyList<String>){
+        
     }
 }

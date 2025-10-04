@@ -11,7 +11,7 @@ class App {
 
 
 fun main() {
-    val graphFilePath: String = readln()
+    val graphFilePath: String = "/home/mexidis/development/mintree/files/input.txt"
 
     try {
         // 1. Leer y construir la gráfica desde el archivo
@@ -20,13 +20,13 @@ fun main() {
 
         // 2. Encontrar el Árbol Generador de Peso Mínimo (MST)
         //println("\n2. Calculando el Árbol Generador de Peso Mínimo (MST) usando Kruskal...")
-        val kruskal = KruskalMST<String>()
-        val mst = kruskal.findMST(graph)
-        val totalWeight = mst.edges.sumOf { it.weight }
+        // val kruskal = KruskalMST<String>()
+        // val mst = kruskal.findMST(graph)
+        // val totalWeight = mst.edges.sumOf { it.weight }
 
-        println("MST:")
-        println(mst)
-        println("Peso total del MST: $totalWeight")
+        // println("MST:")
+        // println(mst)
+        // println("Peso total del MST: $totalWeight")
 
     } catch (e: Exception) {
         System.err.println("Ocurrio un error: ${e.message}")

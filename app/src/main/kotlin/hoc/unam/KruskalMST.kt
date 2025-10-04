@@ -59,23 +59,23 @@ class KruskalMST<V> {
      * @param graph La gráfica de entrada.
      * @return Una nueva gráfica que representa el MST.
      */
-    fun findMST(graph: Graph<V>): Graph<V> {
-        val mst = Graph<V>()
-        val unionFind = UnionFind(graph.vertices)
+    // fun findMST(graph: AdjacencyList<V>): AdjacencyList<V> {
+    //     val mst = AdjacencyList<V>()
+    //     val unionFind = UnionFind(graph.vertices)
 
-        // 1. Ordenar todas las aristas por peso de forma ascendente.
-        val sortedEdges = graph.edges.sortedBy { it.weight }
+    //     // 1. Ordenar todas las aristas por peso de forma ascendente.
+    //     val sortedEdges = graph.edges.sortedBy { it.weight }
 
-        // 2. Iterar sobre las aristas ordenadas.
-        for (edge in sortedEdges) {
-            // 3. Si los vértices de la arista no forman un ciclo (están en diferentes conjuntos)...
-            if (unionFind.find(edge.u) != unionFind.find(edge.v)) {
-                // ...añadir la arista al MST.
-                mst.addEdge(edge.u, edge.v, edge.weight)
-                // Y unir los conjuntos de los vértices.
-                unionFind.union(edge.u, edge.v)
-            }
-        }
-        return mst
-    }
+    //     // 2. Iterar sobre las aristas ordenadas.
+    //     for (edge in sortedEdges) {
+    //         // 3. Si los vértices de la arista no forman un ciclo (están en diferentes conjuntos)...
+    //         if (unionFind.find(edge.u) != unionFind.find(edge.v)) {
+    //             // ...añadir la arista al MST.
+    //             mst.addEdge(edge.u, edge.v, edge.weight)
+    //             // Y unir los conjuntos de los vértices.
+    //             unionFind.union(edge.u, edge.v)
+    //         }
+    //     }
+    //     return mst
+    // }
 }
