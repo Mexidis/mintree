@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/mintree.iml" filepath="$PROJECT_DIR$/.idea/mintree.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/mintree.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/mintree.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/mintree.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/mintree.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/mintree.app.test.iml" filepath="$PROJECT_DIR$/.idea/modules/app/mintree.app.test.iml" />
     </modules>
   </component>
 </project>

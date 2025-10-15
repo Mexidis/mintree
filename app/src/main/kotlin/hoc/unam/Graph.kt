@@ -1,30 +1,48 @@
 package hoc.unam
 
-interface Graph<T> {
+open class Graph (private val nodes: Int, private val nodesList: MutableSet<String>) {
+    private val adjMatrix: Array<DoubleArray> =
+        Array(nodes) { DoubleArray(nodes) }
 
-  fun createVertex(data: T): Vertex<T>
+    private val indexedValues: MutableMap<String, Int> = mutableMapOf()
 
-  fun addDirectedEdge(source: Vertex<T>, 
-                      destination: Vertex<T>, 
-                      weight: Double?)
+    init {
+        var i = 0
+        for (node in nodesList) {
+            indexedValues[node] = i
+            i++
+        }
+    }
 
-  fun addUndirectedEdge(source: Vertex<T>, 
-                        destination: Vertex<T>, 
-                        weight: Double?)
+    fun addEdge(source: String, destination: String, weight: Double) {
+        val u = indexedValues[source]!!
+        val v = indexedValues[destination]!!
+        adjMatrix[u][v] = weight
+        adjMatrix[v][u] = weight
+    }
 
-  fun add(edge: EdgeType, 
-          source: Vertex<T>, 
-          destination: Vertex<T>, 
-          weight: Double?)
+    fun getDistance(source: String, destination: String): Double {
+        val u = indexedValues[source]!!
+        val v = indexedValues[destination]!!
+        return adjMatrix[u][v]
+    }
 
-  fun edges(source: Vertex<T>): ArrayList<Edge<T>>
 
-  fun weight(source: Vertex<T>, 
-             destination: Vertex<T>): Double?
+    fun printMatrix() {
+        val sortedNodes = nodesList.sorted()
+        println("\n--- Adjacency Matrix ---")
+        print("      ")
+        sortedNodes.forEach { print("%-5s ".format(it)) }
+        println("\n" + "------".repeat(nodes + 1))
 
-}
-
-enum class EdgeType {
-  DIRECTED,
-  UNDIRECTED
+        for (sourceNode in sortedNodes) {
+            print("%-5s|".format(sourceNode))
+            for (destNode in sortedNodes) {
+                val weight = getDistance(sourceNode, destNode)
+                print("%-5.1f ".format(weight))
+            }
+            println()
+        }
+        println("------------------------------")
+    }
 }
