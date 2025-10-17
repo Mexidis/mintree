@@ -12,6 +12,8 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
         }
 
     private lateinit var adjMatrixWarshalled: Array<DoubleArray>
+    private lateinit var completedGraph: Array<DoubleArray>
+
     private var diameter: Double? = null
     private val indexedValues: MutableMap<String, Int> = mutableMapOf()
 
@@ -25,6 +27,7 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
 
     fun completeGraph(){
         calculateShortestPaths()
+        completedGraph = adjMatrixWarshalled.map { it.clone() }.toTypedArray()
         for (i in 0 until nodes) {
             for (j in 0 until nodes) {
 
@@ -36,7 +39,7 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
                     // los nodos deberían estar conectados
                     if (shortestPath != Double.POSITIVE_INFINITY) {
                         val newWeight = shortestPath * this.diameter!!
-                        adjMatrix[i][j] = newWeight
+                        completedGraph[i][j] = newWeight
                     }
                 }
             }
@@ -54,6 +57,21 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
         val u = indexedValues[source]!!
         val v = indexedValues[destination]!!
         return adjMatrix[u][v]
+    }
+
+    fun getNormalizer(k: Int): Double {
+        val edgeWeights = mutableListOf<Double>()
+        for (i in 0 until nodes) {
+            for (j in i + 1 until nodes) {
+                val weight = adjMatrix[i][j]
+                if (weight > 0 && weight != Double.POSITIVE_INFINITY) {
+                    edgeWeights.add(weight)
+                }
+            }
+        }
+
+        return edgeWeights.sortedDescending().take(k - 1).sum()
+
     }
 
     private fun calculateShortestPaths(){
@@ -97,6 +115,10 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
 
     fun getAdjMatShortestPaths(): Array<DoubleArray>{
         return this.adjMatrixWarshalled
+    }
+
+    fun getCompletedGraph(): Array<DoubleArray>{
+        return this.completedGraph
     }
 
     fun printMatrix() {

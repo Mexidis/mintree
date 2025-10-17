@@ -14,8 +14,8 @@ class App {
 
 
 fun main() {
-    val graphFilePath: String = "/home/mexidis/development/mintree/files/input.txt"
-
+    //val graphFilePath: String = "/home/mexidis/development/mintree/files/input.txt"
+    val graphFilePath = "files/input.txt"
     try {
         val reader = FileReaderToGraph(graphFilePath)
 
@@ -40,7 +40,19 @@ fun main() {
             println()
         }
 
-        myGraph.printMatrix()
+
+        println("----------------------------")
+
+        val completed = myGraph.getCompletedGraph()
+        for (row in completed) {
+            for (distance in row) {
+                val displayValue = if (distance == Double.POSITIVE_INFINITY) "Inf" else "%.1f".format(distance)
+                print("%-6s ".format(displayValue))
+            }
+            println()
+        }
+
+        //myGraph.printMatrix()
 
     } catch (e: IOException) {
         // Este bloque se ejecutará si el archivo no se encuentra
@@ -51,5 +63,4 @@ fun main() {
     }
 }
 
-// TODO crear el normalizador
 // TODO hacer la función de costo

@@ -28,12 +28,12 @@ class FileReaderToGraph(private val filePath: String) {
                         nodesList.add(v)
                         edgesList.add(Edge(u, v, weight))
                     } catch (e: NumberFormatException) {
-                        System.err.println("Warning, wrong line size: $line")
+                        System.err.println("Warning, wrong line size: $line, $e")
                     }
                 } else {
                     System.err.println("Warning, wrong line format: $line")
                 }
-        }
+            }
         }
 
         // create the graph
