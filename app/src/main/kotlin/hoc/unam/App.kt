@@ -14,7 +14,7 @@ class App {
 
 
 fun main() {
-    val graphFilePath: String = "files/input.txt"
+    val graphFilePath: String = "/home/mexidis/development/mintree/files/input.txt"
 
     try {
         val reader = FileReaderToGraph(graphFilePath)
@@ -29,6 +29,18 @@ fun main() {
         println(distance_f_g) // Debería ser 11.0
 
         myGraph.printMatrix()
+        myGraph.completeGraph()
+        val shortestPaths = myGraph.getAdjMatShortestPaths()
+        // Imprimir la matriz de resultados
+        for (row in shortestPaths) {
+            for (distance in row) {
+                val displayValue = if (distance == Double.POSITIVE_INFINITY) "Inf" else "%.1f".format(distance)
+                print("%-6s ".format(displayValue))
+            }
+            println()
+        }
+
+        myGraph.printMatrix()
 
     } catch (e: IOException) {
         // Este bloque se ejecutará si el archivo no se encuentra
@@ -39,7 +51,5 @@ fun main() {
     }
 }
 
-// TODO Calcular Floy-Warshall
-// TODO completar la gráfica
 // TODO crear el normalizador
 // TODO hacer la función de costo
