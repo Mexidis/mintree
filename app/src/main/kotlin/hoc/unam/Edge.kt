@@ -9,4 +9,8 @@ package hoc.unam
  * @property v El otro vértice de la arista.
  * @property weight El peso o costo asociado a la arista.
  */
-data class Edge<V>(val u: V, val v: V, val weight: Double)
+data class Edge(
+    val source: String,
+    val destination: String,
+    val weight: Double
+)
