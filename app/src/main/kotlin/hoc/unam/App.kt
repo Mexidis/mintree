@@ -28,30 +28,23 @@ fun main() {
         val distance_f_g = myGraph.getDistance("f", "g")
         println(distance_f_g) // Debería ser 11.0
 
-        myGraph.printMatrix()
+        myGraph.printGraphMatrix(MatrixType.ADJACENCY)
         myGraph.completeGraph()
         val shortestPaths = myGraph.getAdjMatShortestPaths()
         // Imprimir la matriz de resultados
-        for (row in shortestPaths) {
-            for (distance in row) {
-                val displayValue = if (distance == Double.POSITIVE_INFINITY) "Inf" else "%.1f".format(distance)
-                print("%-6s ".format(displayValue))
-            }
-            println()
-        }
+        myGraph.printGraphMatrix(MatrixType.SHORTEST_PATHS)
 
 
-        println("----------------------------")
+        myGraph.printGraphMatrix(MatrixType.COMPLETED)
 
-        val completed = myGraph.getCompletedGraph()
-        for (row in completed) {
-            for (distance in row) {
-                val displayValue = if (distance == Double.POSITIVE_INFINITY) "Inf" else "%.1f".format(distance)
-                print("%-6s ".format(displayValue))
-            }
-            println()
-        }
 
+        val kNodes = 4 // Queremos un MST que conecte 4 nodos (3 aristas)
+
+        println("\n--- Ejecutando el Algoritmo de Prim (K=$kNodes MST) ---")
+        val totalMstCost = myGraph.primsAlgorithm(kNodes)
+        println("-------------------------------------------------------")
+        println("Costo Total del MST de $kNodes nodos: ${"%.2f".format(totalMstCost)}")
+        println("-------------------------------------------------------")
         //myGraph.printMatrix()
 
     } catch (e: IOException) {
