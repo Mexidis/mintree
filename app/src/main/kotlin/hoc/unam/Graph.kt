@@ -2,7 +2,7 @@ package hoc.unam
 
 import kotlin.math.min
 
-open class Graph (private val nodes: Int, private val nodesList: MutableSet<String>) {
+open class Graph (private val nodes: Int, private val nodesList: MutableSet<String>, private val edges: MutableList<Edge>) {
     private val adjMatrix: Array<DoubleArray> =
         Array(nodes) { rowIndex ->         // We get the current row index
             DoubleArray(nodes) { colIndex -> // We get the current column index
@@ -11,8 +11,8 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
             }
         }
 
-    private lateinit var adjMatrixWarshalled: Array<DoubleArray>
-    private lateinit var completedGraph: Array<DoubleArray>
+    private lateinit var adjMatrixWarshalled: Array<DoubleArray> // matriz con distancias mínimas
+    private lateinit var completedGraph: Array<DoubleArray> //matriz completada
 
     private var diameter: Double? = null
     private val indexedValues: MutableMap<String, Int> = mutableMapOf()
@@ -58,6 +58,54 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
         val v = indexedValues[destination]!!
         return adjMatrix[u][v]
     }
+
+    fun primsAlgorithm(k: Int): Double{
+        val inMST = BooleanArray(this.nodes)
+        val keyValues = FloatArray(this.nodes) { Float.POSITIVE_INFINITY }
+        val parents = IntArray(this.nodes) {-1}
+        var mstWeight = 0.0
+
+        keyValues[0] = 0.0F  // Starting vertex
+        for (i in 0 until  k) {
+            val u: Int = (0 until this.nodes)
+                .filter { v -> !inMST[v] } // 1. Filtra los índices que NO están en el MST
+                .minByOrNull { v -> keyValues[v] } // 2. Encuentra el índice 'v' con el menor keyValues[v]
+                ?: break // Si el subgrafo no está conectado o ya se seleccionaron todos, rompe.
+
+            inMST[u] = true
+
+            if (parents[u] != -1){
+                // Usamos la lista de nodos para obtener los nombres
+                val parentName = nodesList.find { indexedValues[it] == parents[u] } ?: "???"
+                val childName = nodesList.find { indexedValues[it] == u } ?: "???"
+                // El peso está en la matriz adjMatrix
+                val weight = adjMatrix[u][parents[u]]
+
+                mstWeight += weight
+
+                println("$parentName-$childName \t$weight")
+            }
+
+            //ciclo interior: Actualizar keyValues y parents para todos los vecinos de 'u'
+            for (v in 0 until this.nodes) {
+                val weight = adjMatrix[u][v]
+
+                // Condición de actualización:
+                // a) La arista (u, v) tiene un peso positivo (0 < weight)
+                // b) El peso es menor que el keyValues actual de v (weight < keyValues[v])
+                // c) El nodo v aún no está en el MST (not in_mst[v])
+                if (weight > 0 && weight < keyValues[v] && !inMST[v]) {
+                    // Actualiza el keyValues (costo para conectar v al MST)
+                    keyValues[v] = weight.toFloat() // Convertimos Double a Float para el FloatArray
+
+                    // Actualiza el padre de v (la arista más barata que conecta v al MST)
+                    parents[v] = u
+                }
+            }
+        }
+        return mstWeight
+    }
+
 
     fun getNormalizer(k: Int): Double {
         val edgeWeights = mutableListOf<Double>()
@@ -121,18 +169,38 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
         return this.completedGraph
     }
 
-    fun printMatrix() {
+    fun printGraphMatrix(type: MatrixType) {
+        val matrixToPrint = when (type) {
+            MatrixType.ADJACENCY -> adjMatrix
+            MatrixType.SHORTEST_PATHS -> adjMatrixWarshalled
+            MatrixType.COMPLETED -> completedGraph
+        }
+
+        val title = when (type) {
+            MatrixType.ADJACENCY -> "Adjacency Matrix (Original)"
+            MatrixType.SHORTEST_PATHS -> "Shortest Paths (Floyd-Warshall)"
+            MatrixType.COMPLETED -> "Completed Graph (Diam. Weighted)"
+        }
+
         val sortedNodes = nodesList.sorted()
-        println("\n--- Adjacency Matrix ---")
+        println("\n--- $title ---")
+
         print("      ")
-        sortedNodes.forEach { print("%-5s ".format(it)) }
+        sortedNodes.forEach { print("%-6s ".format(it)) }
         println("\n" + "------".repeat(nodes + 1))
 
         for (sourceNode in sortedNodes) {
             print("%-5s|".format(sourceNode))
+            val u = indexedValues[sourceNode]!!
+
             for (destNode in sortedNodes) {
-                val weight = getDistance(sourceNode, destNode)
-                print("%-5.1f ".format(weight))
+                val v = indexedValues[destNode]!!
+
+                // Usar la matriz seleccionada
+                val distance = matrixToPrint[u][v]
+
+                val displayValue = if (distance == Double.POSITIVE_INFINITY) "Inf" else "%.1f".format(distance)
+                print("%-6s ".format(displayValue))
             }
             println()
         }
