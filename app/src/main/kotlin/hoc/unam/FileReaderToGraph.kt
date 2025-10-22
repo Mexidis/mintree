@@ -37,7 +37,7 @@ class FileReaderToGraph(private val filePath: String) {
         }
 
         // create the graph
-        val graph = Graph(nodesList.size, nodesList)
+        val graph = Graph(nodesList.size, nodesList, edgesList)
 
         // fill the graph
         for (edge in edgesList) {
