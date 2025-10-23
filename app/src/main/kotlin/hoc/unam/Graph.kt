@@ -2,7 +2,7 @@ package hoc.unam
 
 import kotlin.math.min
 
-open class Graph (private val nodes: Int, private val nodesList: MutableSet<String>, private val edges: MutableList<Edge>) {
+open class Graph (private val nodes: Int,private val k: Int, private val nodesList: MutableSet<String>, private val edges: MutableList<Edge>) {
     private val adjMatrix: Array<DoubleArray> =
         Array(nodes) { rowIndex ->         // We get the current row index
             DoubleArray(nodes) { colIndex -> // We get the current column index
@@ -10,6 +10,8 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
                 if (rowIndex == colIndex) 0.0 else Double.POSITIVE_INFINITY
             }
         }
+
+    private lateinit var mstAdjMatrix: Array<DoubleArray> //matriz de adyacencias para representar el MST
 
     private lateinit var adjMatrixWarshalled: Array<DoubleArray> // matriz con distancias mínimas
     private lateinit var completedGraph: Array<DoubleArray> //matriz completada
@@ -59,13 +61,23 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
         return adjMatrix[u][v]
     }
 
+    fun costFunction(k: Int): Double{
+        val w = primsAlgorithm(k)
+        val norm = getNormalizer(k)
+        return w/norm
+    }
+
     fun primsAlgorithm(k: Int): Double{
+        this.mstAdjMatrix = Array(this.nodes){
+            DoubleArray(this.nodes){ Double.POSITIVE_INFINITY }
+        }
         val inMST = BooleanArray(this.nodes)
         val keyValues = FloatArray(this.nodes) { Float.POSITIVE_INFINITY }
         val parents = IntArray(this.nodes) {-1}
         var mstWeight = 0.0
 
         keyValues[0] = 0.0F  // Starting vertex
+
         for (i in 0 until  k) {
             val u: Int = (0 until this.nodes)
                 .filter { v -> !inMST[v] } // 1. Filtra los índices que NO están en el MST
@@ -75,15 +87,17 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
             inMST[u] = true
 
             if (parents[u] != -1){
-                // Usamos la lista de nodos para obtener los nombres
-                val parentName = nodesList.find { indexedValues[it] == parents[u] } ?: "???"
-                val childName = nodesList.find { indexedValues[it] == u } ?: "???"
-                // El peso está en la matriz adjMatrix
                 val weight = adjMatrix[u][parents[u]]
 
                 mstWeight += weight
 
-                println("$parentName-$childName \t$weight")
+                val p = parents[u] // índice del padre
+
+                this.mstAdjMatrix[u][p] = weight
+                this.mstAdjMatrix[p][u] = weight
+
+                mstWeight += weight
+
             }
 
             //ciclo interior: Actualizar keyValues y parents para todos los vecinos de 'u'
@@ -160,7 +174,6 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
     }
 
 
-
     fun getAdjMatShortestPaths(): Array<DoubleArray>{
         return this.adjMatrixWarshalled
     }
@@ -174,12 +187,14 @@ open class Graph (private val nodes: Int, private val nodesList: MutableSet<Stri
             MatrixType.ADJACENCY -> adjMatrix
             MatrixType.SHORTEST_PATHS -> adjMatrixWarshalled
             MatrixType.COMPLETED -> completedGraph
+            MatrixType.MST -> mstAdjMatrix
         }
 
         val title = when (type) {
             MatrixType.ADJACENCY -> "Adjacency Matrix (Original)"
             MatrixType.SHORTEST_PATHS -> "Shortest Paths (Floyd-Warshall)"
             MatrixType.COMPLETED -> "Completed Graph (Diam. Weighted)"
+            MatrixType.MST -> "Minimum Spanning Tree (MST)"
         }
 
         val sortedNodes = nodesList.sorted()

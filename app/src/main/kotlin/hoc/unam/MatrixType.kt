@@ -1,5 +1,5 @@
 package hoc.unam
 
 enum class MatrixType {
-    ADJACENCY, SHORTEST_PATHS, COMPLETED
+    ADJACENCY, SHORTEST_PATHS, COMPLETED, MST
 }
