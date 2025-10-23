@@ -13,11 +13,11 @@ class App {
 }
 
 
-fun main() {
-    //val graphFilePath: String = "/home/mexidis/development/mintree/files/input.txt"
-    val graphFilePath = "files/input.txt"
+fun main(args: Array<String>) {
+    val graphFilePath = args[0]
+    val k = args[1].toInt()
     try {
-        val reader = FileReaderToGraph(graphFilePath)
+        val reader = FileReaderToGraph(graphFilePath,k)
 
         val myGraph = reader.createGraphFromFile()
 
@@ -45,14 +45,14 @@ fun main() {
         println("-------------------------------------------------------")
         println("Costo Total del MST de $kNodes nodos: ${"%.2f".format(totalMstCost)}")
         println("-------------------------------------------------------")
-        //myGraph.printMatrix()
+
+
+        myGraph.printGraphMatrix(MatrixType.MST)
 
     } catch (e: IOException) {
-        // Este bloque se ejecutará si el archivo no se encuentra
-        System.err.println("Error al leer el archivo: ${e.message}")
+        System.err.println("Error al leer el archivo:\n ${e.message}")
     } catch (e: Exception) {
-        // Para cualquier otro error inesperado
-        System.err.println("Ocurrió un error inesperado: ${e.message}")
+        System.err.println(e.message)
     }
 }
 
