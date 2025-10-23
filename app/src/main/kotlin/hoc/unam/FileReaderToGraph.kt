@@ -3,7 +3,7 @@ package hoc.unam
 import java.io.File
 import java.io.IOException
 
-class FileReaderToGraph(private val filePath: String) {
+class FileReaderToGraph(private val filePath: String, private val k: Int) {
 
     fun createGraphFromFile(): Graph {
         val file = File(filePath)
@@ -36,8 +36,10 @@ class FileReaderToGraph(private val filePath: String) {
             }
         }
 
+        edgesList.sortBy{it.weight}
+
         // create the graph
-        val graph = Graph(nodesList.size, nodesList, edgesList)
+        val graph = Graph(nodesList.size, k, nodesList, edgesList)
 
         // fill the graph
         for (edge in edgesList) {
